@@ -18,7 +18,7 @@ import json
 from time import sleep, time
 
 SLEEP_TIMER=1
-IDLE_THRESHOLD=600
+IDLE_THRESHOLD=5
 FILE_NAME = 'activity.json'
 
 running = True
@@ -48,18 +48,18 @@ def main(argv):
     print ("Ctrl+C or SIGTERM to close application")
 
     while running is True:
-        if isLocked() is False and getIdleTime() < 5:
+        if isLocked() is False and getIdleTime() < IDLE_THRESHOLD:
             process, title = getActiveWindow()
             if process is not None:
-                log.append((int(time()),process, title[:-1]));
+                log.append((int(time()),process, title));
                 if len(log) > 1000:
-                    writeToFile(file_name, log)
+                    writeToFile(FILE_NAME, log)
                     del log
                     log = []
         else:
             print "idle or locked"
         sleep(SLEEP_TIMER)
-    writeToFile(file_name, log)
+    writeToFile(FILE_NAME, log)
 
 if __name__ == "__main__":
 	main(sys.argv[1:])

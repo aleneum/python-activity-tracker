@@ -1,16 +1,16 @@
 # Thank you chris for this nice post:
 # http://thp.io/2007/09/x11-idle-time-and-focused-window-in.html
-# and Jim Paris for his answer on superuser:
-# http://superuser.com/questions/382616/detecting-currently-active-window
 
 from subprocess import check_output, CalledProcessError
 from os.path import dirname
 import ctypes
-loc = dirname(__file__)
+
+info_script="dbusCommands.sh"
+loc = dirname(__file__)+"/lnx/"+info_script
 
 def getActiveWindow():
-	try:
-        process, title = check_output(['sh', loc + '/lnx/getActiveWindow.sh']).split(', ',1)
+    try:
+        process, title = check_output(['sh', loc, 'a'])[:-1].split(', ',1)
         return process, title
     except CalledProcessError as e:
         print "CalledProcessError"
@@ -18,9 +18,9 @@ def getActiveWindow():
     return None, None
 
 def getIdleTime():
-	print "not implemented yet"
-	sys.exit(1)
+    time = check_output(['sh', loc, 'i'])[:-1]
+    return int(time)/1000
 
 def isLocked():
-	print "not implemented yet"
-	sys.exit(1)
+    state = check_output(['sh', loc, 'l'])[:-1]
+    return state is "true"
