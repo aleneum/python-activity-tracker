@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+import sys
+if sys.platform == 'linux2':
+    from activity.linux import getActiveWindow
+    from activity.linux import getIdleTime
+    from activity.linux import isLocked
+elif sys.platform == 'darwin':
+    from activity.darwin import getActiveWindow
+    from activity.darwin import getIdleTime
+    from activity.darwin import isLocked
+else:
+    print "OS %s not supported yet" % sys.platform
+    sys.exit(1)
+
+import signal
+import json
+from time import sleep, time
+
+SLEEP_TIMER=1
+IDLE_THRESHOLD=600
+FILE_NAME = 'activity.json'
+
+running = True
+
+# rules = {
+#     'Terminal':re.compile('^Terminal,'),
+#     'Browser':re.compile('^(firefox|Google Chrome),')
+# }
+
+def onExit(signal, func=None):
+    global running
+    print "Shutting down.."
+    running = False
+
+def writeToFile(file_name, content):
+    f = open(file_name, "a")
+    json.dump(content, f)
+    f.close()
+    return
+
+def main(argv):
+    log = []
+    global running
+    signal.signal(signal.SIGTERM, onExit)
+    signal.signal(signal.SIGQUIT, onExit)
+    signal.signal(signal.SIGINT, onExit)
+    print ("Ctrl+C or SIGTERM to close application")
+
+    while running is True:
+        if isLocked() is False and getIdleTime() < 5:
+            process, title = getActiveWindow()
+            if process is not None:
+                log.append((int(time()),process, title[:-1]));
+                if len(log) > 1000:
+                    writeToFile(file_name, log)
+                    del log
+                    log = []
+        else:
+            print "idle or locked"
+        sleep(SLEEP_TIMER)
+    writeToFile(file_name, log)
+
+if __name__ == "__main__":
+	main(sys.argv[1:])
