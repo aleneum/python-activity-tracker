@@ -1,0 +1,3 @@
+[gui_scripts]
+ActivityTracker = activity_tracker.app:main
+

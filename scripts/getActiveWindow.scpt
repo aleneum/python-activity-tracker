@@ -3,7 +3,7 @@
 # tested on Mac OS X 10.7.5
  
 global frontApp, frontAppName, windowTitle
- 
+
 set windowTitle to ""
 tell application "System Events"
 	set frontApp to first application process whose frontmost is true
@@ -17,6 +17,7 @@ tell application "System Events"
 			set windowTitle to frontAppName
 		end try
 	end tell
+	set identifier to bundle identifier of frontApp
 end tell
  
-return {frontAppName, windowTitle}
+return {frontAppName, identifier, windowTitle}

@@ -1,0 +1,7 @@
+__version__ = '0.1.0'
+__application_name__ = 'ActivityTracker'
+__package_name__ = 'activity-tracker'
+__package_description__ = 'Tracks your screen activity'
+__package_long_description__ = 'Want to keep track of what you do all day? This might be your tool!'
+__author_name__ = 'Alexander Neumann'
+__author_email__ = 'aleneum@gmail.com'
