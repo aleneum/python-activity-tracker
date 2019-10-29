@@ -1,0 +1,11 @@
+{
+    "log_path": "~/.config/activity_log.csv",
+    "log_interval": 10,
+    "idle_threshold": 300,
+    "memory_limit": 50,
+    "rules": {
+        "Terminal": "^terminal",
+        "Browser": "^(firefox|google chrome)",
+        "Editor": "^(vscode|pycharm|emacs|sublime text)"
+    }
+}

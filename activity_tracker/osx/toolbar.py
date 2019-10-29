@@ -27,6 +27,10 @@ class ActivityToolbar(rumps.App):
     def show_log(self, _):
         self.target.show_log()
 
+    @rumps.clicked("Prefences")
+    def show_config(self, _):
+        self.target.show_config()
+
     @rumps.clicked("Quit")
     def quit(self, _):
         _LOGGER.debug("Quit triggered")

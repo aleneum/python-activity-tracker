@@ -19,7 +19,7 @@ OPTIONS = {
         ]
     }
 }
-DATA_FILES = [('', ['scripts'])]
+DATA_FILES = [('', ['data'])]
 
 setup(
     app=APP,
@@ -29,6 +29,7 @@ setup(
     version=__version__,
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
+    package_data={'': ['../data/*.sh', '../data/*.scpt', '../data/*.json']},
     author=__author_name__,
     author_email=__author_email__,
     description=__package_description__,

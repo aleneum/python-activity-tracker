@@ -5,9 +5,9 @@ import logging
 import pkg_resources
 
 try:
-    loc = pkg_resources.resource_filename(__name__, '../scripts/')
+    loc = pkg_resources.resource_filename(__name__, '../data/')
 except NotImplementedError:  # thrown when package is a zip and not an egg folder (py2app)
-    loc = './scripts/'
+    loc = './data/'
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class DarwinBackend:
         return not unlocked
 
     @staticmethod
-    def show_log(file):
+    def open_text(file):
         check_output(['open', file])
 
 # test scripts
