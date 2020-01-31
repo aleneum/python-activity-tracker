@@ -1,6 +1,7 @@
 import datetime
 import time
 import sys
+from os.path import expanduser
 
 summary = []
 current_title = None 
@@ -14,7 +15,7 @@ def parse_line(line):
     title = arr[2].strip()
     return ts, app, title
 
-with open("activity.log", "r") as f:
+with open(expanduser("~/.config/activity_log.csv"), "r") as f:
     current_ts, current_app, current_title = parse_line(f.readline())
     for l in f.readlines():
         ts, app, title = parse_line(l)

@@ -27,29 +27,27 @@ class ActivityRunner:
         _LOGGER.info("Start tracking")
         self.running = True
         while self.running:
-            if self.os.isLocked() is False and self.os.getIdleTime() < self.config.idle_threshold:
-                process, title = self.os.getActiveWindow()
-                if process is not None:
-                    category = ""
-                    p_lower = process.lower()
-                    for cat, rule in self.config.rules.items():
-                        if rule.match(p_lower):
-                            category = cat
-                            break
-                    entry = (int(time()), process, category, title.encode("unicode_escape").decode("utf-8"))
-                    self.log.append(entry)
-                    _LOGGER.debug("Logging: %s", entry)
-                    if len(self.log) > self.config.memory_limit:
-                        self.writeToFile()
+            try:
+                if self.os.isLocked() is False and self.os.getIdleTime() < self.config.idle_threshold:
+                    process, title = self.os.getActiveWindow()
+                    if process is not None:
+                        entry = (int(time()), process, title.encode("unicode_escape").decode("utf-8"))
+                        self.log.append(entry)
+                        _LOGGER.debug("Logging: %s", entry)
+                        if len(self.log) > self.config.memory_limit:
+                            self.writeToFile()
+                    else:
+                        _LOGGER.warn("Could not retrieve active process name, skipping entry")
                 else:
-                    _LOGGER.warn("Could not retrieve active process name, skipping entry")
-            else:
-                self.log.append((int(time()), '',  ''))
-                _LOGGER.debug("idle or locked")
-            current_sleep = 0
-            while self.running and current_sleep < self.config.log_interval:
-                sleep(1)
-                current_sleep += 1
+                    self.log.append((int(time()), '',  ''))
+                    _LOGGER.debug("idle or locked")
+                current_sleep = 0
+                while self.running and current_sleep < self.config.log_interval:
+                    sleep(1)
+                    current_sleep += 1
+            except Exception as err:
+                _LOGGER.error(err)
+                sleep(self.config.log_interval)
         _LOGGER.info("Exit tracking loop.")
         self.writeToFile()
 
@@ -57,7 +55,10 @@ class ActivityRunner:
         _LOGGER.info("Flush log to %s", self.config.log_path)
         with open(self.config.log_path, "a") as f:
             for l in self.log:
-                print("{},\"{}\",\"{}\",\"{}\"".format(*l), file=f)
+                try:
+                    print("{},\"{}\",\"{}\"".format(*l), file=f)
+                except IndexError:
+                    _LOGGER.warn("Could not log tuple: %s", l)
         self.log.clear()
 
     def stop(self):

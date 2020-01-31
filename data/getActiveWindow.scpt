@@ -13,8 +13,8 @@ tell application "System Events"
 			tell (1st window whose value of attribute "AXMain" is true)
 				set windowTitle to value of attribute "AXTitle"
 			end tell
-		on error
-			set windowTitle to frontAppName
+		on error errStr
+			set windowTitle to "ERROR: " & errStr
 		end try
 	end tell
 	set identifier to bundle identifier of frontApp

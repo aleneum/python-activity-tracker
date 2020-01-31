@@ -32,7 +32,10 @@ class DarwinBackend:
         result = run_script()
         if result:
             process, identifier, title = result.decode("utf-8")[:-1].split(', ', 2)
-            return get_app(process, identifier), title
+            app = get_app(process, identifier)
+            if app == 'Emacs' and title.startswith('ERROR:'):
+                title = check_output(["emacsclient", "--eval", "(buffer-name (window-buffer (selected-window)))"]).strip().decode("utf-8")
+            return app, title
         else:
             return None, None
 
