@@ -4,7 +4,7 @@ import logging
 from os.path import exists, expanduser
 
 from activity_tracker.runner import ActivityRunner
-#
+
 _LOGGER = logging.getLogger(__name__)
 
 if sys.platform == 'linux2':

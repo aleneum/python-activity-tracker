@@ -36,6 +36,11 @@ class Config:
     def memory_limit(self):
         return self.data['memory_limit']
 
+    @property
+    def debug_path(self):
+        return expanduser(self.data['debug_path']) if 'debug_path' in self.data else None
+
+
 if __name__ == '__main__':
     conf = Config(expanduser('~/.config/activity_tracker.json'))
     print(conf.rules)

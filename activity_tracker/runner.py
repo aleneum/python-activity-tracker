@@ -16,6 +16,12 @@ class ActivityRunner:
         self.os = backend
         self.config_path = config
         self.config = Config(config)
+        debug_path = self.config.debug_path
+        if debug_path:
+            formatter = logging.Formatter("%(asctime)-15s\t%(levelname)s\t%(name)s\t%(message)s")
+            handler = logging.FileHandler(debug_path)
+            handler.setFormatter(formatter)
+            logging.getLogger().addHandler(handler)
         self.thread = None
 
     def start(self):
@@ -33,7 +39,7 @@ class ActivityRunner:
                     if process is not None:
                         entry = (int(time()), process, title.encode("unicode_escape").decode("utf-8"))
                         self.log.append(entry)
-                        _LOGGER.debug("Logging: %s", entry)
+                        _LOGGER.debug("%s", entry)
                         if len(self.log) > self.config.memory_limit:
                             self.writeToFile()
                     else:
