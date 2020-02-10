@@ -29,11 +29,7 @@ class WindowsBackend:
         result = run_script('getActiveWindow.ps1')
         if result is not None:
             name, description, title = result.split(', ', 2) # name is process name, description usually more readable
-            if not description:
-                description = name
-            if not description:
-                description = title = None
-            return description, title
+            return name, description, title
         else:
             return None, None
 

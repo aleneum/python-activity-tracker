@@ -11,12 +11,6 @@ except NotImplementedError:  # thrown when package is a zip and not an egg folde
 
 _LOGGER = logging.getLogger(__name__)
 
-def get_app(title, identifier):
-    if title in ['Electron'] or identifier in ['org.gnu.Emacs']:
-        return identifier.split('.')[-1]
-    else:
-        return title
-
 def run_script():
     res = None
     try:
@@ -32,10 +26,9 @@ class DarwinBackend:
         result = run_script()
         if result:
             process, identifier, title = result.decode("utf-8")[:-1].split(', ', 2)
-            app = get_app(process, identifier)
-            if app == 'Emacs' and title.startswith('ERROR:'):
+            if identifier == 'org.gnu.Emacs' and title.startswith('ERROR:'):
                 title = check_output(["emacsclient", "--eval", "(buffer-name (window-buffer (selected-window)))"]).strip().decode("utf-8")
-            return app, title
+            return process, identifier, title
         else:
             return None, None
 

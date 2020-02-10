@@ -35,9 +35,9 @@ class ActivityRunner:
         while self.running:
             try:
                 if self.os.isLocked() is False and self.os.getIdleTime() < self.config.idle_threshold:
-                    process, title = self.os.getActiveWindow()
+                    process, info, title = self.os.getActiveWindow()
                     if process is not None:
-                        entry = (int(time()), process, title.encode("unicode_escape").decode("utf-8"))
+                        entry = (int(time()), process, info, title.encode("unicode_escape").decode("utf-8"))
                         self.log.append(entry)
                         _LOGGER.debug("%s", entry)
                         if len(self.log) > self.config.memory_limit:
@@ -45,7 +45,7 @@ class ActivityRunner:
                     else:
                         _LOGGER.warn("Could not retrieve active process name, skipping entry")
                 else:
-                    self.log.append((int(time()), '',  ''))
+                    self.log.append((int(time()), '',  '', ''))
                     _LOGGER.debug("idle or locked")
                 current_sleep = 0
                 while self.running and current_sleep < self.config.log_interval:
@@ -62,7 +62,7 @@ class ActivityRunner:
         with open(self.config.log_path, "a") as f:
             for l in self.log:
                 try:
-                    print("{},\"{}\",\"{}\"".format(*l), file=f)
+                    print("{},\"{}\",\"{}\",\"{}\"".format(*l), file=f)
                 except IndexError:
                     _LOGGER.warn("Could not log tuple: %s", l)
         self.log.clear()
