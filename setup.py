@@ -18,7 +18,7 @@ setup(
     long_description=__package_long_description__,
     install_requires=required_packages,
     packages=find_packages(),
-    package_data={'': ['../data/*.sh', '../data/*.scpt', '../data/*.json']},
+    package_data={'': ['../data/*.sh', '../data/*.scpt', '../data/*.json', '../data/*.ps1']},
     entry_points={
         'gui_scripts': [
             f'{__application_name__} = activity_tracker.app:main'

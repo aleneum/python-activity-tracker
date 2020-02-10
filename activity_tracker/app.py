@@ -4,7 +4,7 @@ import logging
 from os.path import exists, expanduser
 
 from activity_tracker.runner import ActivityRunner
-
+#
 _LOGGER = logging.getLogger(__name__)
 
 if sys.platform == 'linux2':
@@ -21,6 +21,9 @@ if sys.platform == 'linux2':
 elif sys.platform == 'darwin':
     from activity_tracker.darwin import DarwinBackend as Backend
     from activity_tracker.osx.toolbar import ToolbarApp as App
+elif sys.platform == 'win32':
+    from activity_tracker.windows import WindowsBackend as Backend
+    from activity_tracker.win.toolbar import ToolbarApp as App
 else:
     print("OS %s not supported yet" % sys.platform)
     sys.exit(1)
