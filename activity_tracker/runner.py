@@ -1,7 +1,7 @@
 import threading
 import logging
 from time import time, sleep
-import re
+from os.path import exists
 
 from activity_tracker.config import Config
 
@@ -59,6 +59,9 @@ class ActivityRunner:
 
     def writeToFile(self):
         _LOGGER.info("Flush log to %s", self.config.log_path)
+        if not exists(self.config.log_path):
+            with open(self.config.log_path, "w") as f:
+                print("timestamp,process,info,title", file=f)
         with open(self.config.log_path, "a") as f:
             for l in self.log:
                 try:
